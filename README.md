@@ -31,3 +31,5 @@ The 10 carousel selections are split 5 client / 5 personal.
 The renamed archive has 56 full-portfolio images. Some newly named
 pieces (e.g. Summer Madness and Jordan Poster) are provisionally classified
 as personal until confirmed.
+
+V3.3: Consolidated full stylesheet, tighter hero spacing, smaller supporting copy and arrow, removed availability dot. All original artwork retained unchanged.
