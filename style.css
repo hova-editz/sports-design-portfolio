@@ -1396,3 +1396,67 @@ button {
   .selected .collection-title-link h3 { font-size: var(--type-label); }
   .selected .collection-title-link .collection-arrow { font-size: 12px; }
 }
+
+/* V4.7 — mobile refinements; desktop layout remains untouched. */
+.arrow-icon {display:block;width:1em;height:1em;flex:none;}
+.round-arrow .arrow-icon {width:1.15em;height:1.15em;}
+.collection-arrow .arrow-icon {width:1em;height:1em;}
+.nav-cta span .arrow-icon,.contact-form button span .arrow-icon {width:1em;height:1em;}
+@media (max-width:850px) {
+  /* Text-only menu toggle and a consistent, left-aligned navigation list. */
+  .menu-button {border:0;background:transparent;padding:12px 0 12px 12px;font-family:var(--sans);font-size:.75rem;font-weight:700;letter-spacing:.07em;cursor:pointer;}
+  .nav {gap:0;padding-top:18px;padding-bottom:24px;}
+  .nav > a {display:flex;align-items:center;justify-content:flex-start;width:100%;padding:13px 0;min-height:44px;box-sizing:border-box;}
+  .nav .nav-cta {border:0;padding:13px 0;margin:0;gap:12px;}
+  .nav .nav-cta span {margin-left:0;display:inline-flex;align-items:center;}
+}
+@media (max-width:680px) {
+  /* Override desktop flex-basis and margins that created a tall empty gap. */
+  .selected .section-heading {margin:26px 0 12px;gap:18px;align-items:flex-start;}
+  .selected .section-heading p {flex:0 0 auto;width:100%;max-width:100%;margin:0;}
+  .selected .collection-grid {gap:28px;}
+  .selected .stack-gallery {height:clamp(265px,70vw,350px);}
+}
+
+
+/* V4.8 — desktop-only layout corrections; mobile V4.7 remains unchanged. */
+@media (min-width: 851px) {
+  /* Keep the desktop CTA on one baseline, with a non-wrapping icon. */
+  .nav .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    white-space: nowrap;
+  }
+  .nav .nav-cta span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    margin-left: 0;
+  }
+  /* Match headline/description vertical relationships in both editorial sections. */
+  .selected .section-heading,
+  .capabilities .section-heading {
+    align-items: center;
+  }
+  .selected .section-heading p,
+  .capabilities .section-heading p {
+    align-self: center;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  /* Preserve the service grid, but finish descriptions on the right edge. */
+  .capabilities .service p {
+    text-align: right;
+    justify-self: stretch;
+  }
+}
+
+/* V4.9 — desktop Selected Work description aligns with right-hand section label. */
+@media (min-width: 851px) {
+  .selected .section-heading p {
+    text-align: right;
+  }
+}

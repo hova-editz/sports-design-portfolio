@@ -111,3 +111,6 @@ Replaced the footer Instagram northeast arrow with a compact green Instagram gly
 
 ## V4.5
 Collection links under Selected Work now use centered DM Sans Medium (500), 22px desktop, with 16px arrows. No other layout, interaction, or artwork changes.
+
+
+V4.8: Desktop-only CTA single-line layout, right-aligned service descriptions, and consistent editorial headline/paragraph vertical alignment. Mobile V4.7 styles preserved.
