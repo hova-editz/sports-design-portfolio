@@ -15,6 +15,7 @@ html {
 }
 body {
   margin: 0;
+  overflow-x: clip;
   background: var(--black);
   color: var(--cream);
   font-family: var(--sans);
