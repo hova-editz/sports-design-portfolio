@@ -1460,3 +1460,34 @@ button {
     text-align: right;
   }
 }
+
+/* V5.0 — mobile-only containment and Selected Work spacing.
+   No desktop layout or typography changes. */
+@media (max-width: 680px) {
+  /* The animated track is wider than the screen; contain it locally. */
+  .carousel-shell { overflow: hidden; }
+  /* Keep heading, description and artwork as a compact editorial group. */
+  .selected .section-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 24px;
+    margin-top: 26px;
+    margin-bottom: 22px;
+  }
+  .selected .section-heading h2 { margin: 0; flex: none; }
+  .selected .section-heading p {
+    flex: none;
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    text-align: left;
+  }
+}
+/* Clip any remaining transformed off-screen content at the root,
+   without interfering with vertical document scrolling. */
+@media (max-width: 850px) {
+  html { overflow-x: clip; }
+}
