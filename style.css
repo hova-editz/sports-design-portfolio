@@ -1894,3 +1894,10 @@ html {
   overscroll-behavior-x:contain;
 }
 .collections .horizontal-card-row .project-card { scroll-snap-align:none !important; }
+
+/* V6.39: keep the featured artwork vertically scrollable on phones,
+   while touch swipes horizontally advance the main image. */
+@media (max-width:700px) {
+  .feature-viewport { touch-action:pan-y pinch-zoom; }
+  .nav-bubble { transition:bottom .12s ease-out; }
+}
