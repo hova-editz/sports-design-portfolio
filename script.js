@@ -159,10 +159,9 @@
   schedule();
 })();
 
-/* V6.35: reliable Mac trackpad scrolling for project-category shelves.
-   Horizontal gestures retain their direction; vertical wheel motion also moves
-   a shelf horizontally while the pointer is over it. Let page scrolling resume
-   at either end. Featured carousel is intentionally excluded. */
+/* V6.36: native, momentum-preserving trackpad scroll for project shelves.
+   Horizontal gestures are handled by the browser; vertical wheel input is
+   translated only when needed. No snapping or scripted easing during swipes. */
 (function(){
   function enableHorizontalRows(){
     document.querySelectorAll('.slider-shell').forEach(shell=>{
@@ -171,21 +170,19 @@
       shell.dataset.trackpadReady='true';
       shell.addEventListener('wheel',e=>{
         if(e.ctrlKey || e.metaKey || e.defaultPrevented)return;
-        const maxScroll=Math.max(0,row.scrollWidth-row.clientWidth);
-        if(maxScroll<2)return;
-        // Use the dominant axis for both two-finger horizontal swipes and
-        // ordinary mouse-wheel / vertical trackpad gestures.
-        const dx=e.deltaX,dy=e.deltaY;
-        let delta=Math.abs(dx)>=Math.abs(dy)?dx:dy;
+        const max=Math.max(0,row.scrollWidth-row.clientWidth);
+        if(max<2)return;
+        // Native horizontal trackpad scrolling retains Safari's own momentum.
+        if(Math.abs(e.deltaX)>0.5)return;
+        let delta=e.deltaY;
         if(e.deltaMode===1)delta*=16;
         else if(e.deltaMode===2)delta*=row.clientWidth;
         if(Math.abs(delta)<0.1)return;
-        const current=row.scrollLeft;
-        const target=Math.min(maxScroll,Math.max(0,current+delta));
-        if(Math.abs(target-current)<0.1)return;
+        const target=Math.min(max,Math.max(0,row.scrollLeft+delta));
+        if(Math.abs(target-row.scrollLeft)<0.1)return;
         e.preventDefault();
         row.scrollLeft=target;
-      },{passive:false,capture:true});
+      },{passive:false});
       row.addEventListener('keydown',e=>{
         if(e.target!==row||!['ArrowLeft','ArrowRight'].includes(e.key))return;
         e.preventDefault();

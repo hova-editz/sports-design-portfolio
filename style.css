@@ -1878,3 +1878,11 @@ html {
     min-height: 80px;
   }
 }
+
+/* V6.36: fluid native trackpad movement, without card-by-card snapping. */
+.collections .cards-grid.horizontal-card-row {
+  scroll-snap-type: none !important;
+  scroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+.collections .horizontal-card-row .project-card { scroll-snap-align: none !important; }
