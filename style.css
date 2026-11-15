@@ -1856,3 +1856,6 @@ html {
   outline-style: solid !important;
   outline-offset: -1px !important;
 }
+
+/* V6.30: Match homepage footer spacing to Resume footer only. */
+.portfolio-page .footer { padding-top: 20px !important; padding-bottom: 24px !important; align-items: center; }
