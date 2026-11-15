@@ -1724,7 +1724,7 @@ html {
 .collections .horizontal-card-row .project-card { scroll-snap-align:start; }
 .collections .horizontal-card-row .project-image {
   outline:2px solid transparent;
-  outline-offset:-2px;
+  outline-offset:-1px;
 
 }
 .collections .horizontal-card-row .project-card:is(:hover,:focus-visible,:active) .project-image {
