@@ -59,23 +59,34 @@
     if(Math.min(forward,backward)===1){step(forward===1?1:-1);return}
     active=index;position=index+1;renderSelection();setPosition(false);
   }
-  // V6.39: touch swipes change the main featured image on mobile only.
-  // Desktop keeps arrow, dot and thumbnail navigation without wheel scrolling.
+  // V6.41: swipe on mobile, including embedded WebKit browsers that
+  // sometimes cancel touchend during horizontal gestures. No desktop wheel handler.
   const featureViewport=document.querySelector('.feature-viewport');
   if(featureViewport){
-    let touchStart=null;
+    let gesture=null;
+    const mobile=()=>matchMedia('(max-width: 700px)').matches;
     featureViewport.addEventListener('touchstart',e=>{
-      if(!matchMedia('(max-width: 700px)').matches || e.touches.length!==1)return;
-      const t=e.touches[0];touchStart={x:t.clientX,y:t.clientY};
+      if(!mobile()||e.touches.length!==1){gesture=null;return}
+      const t=e.touches[0];gesture={x:t.clientX,y:t.clientY,lastX:t.clientX,lastY:t.clientY,done:false};
+    },{passive:true});
+    featureViewport.addEventListener('touchmove',e=>{
+      if(!gesture||!mobile()||e.touches.length!==1)return;
+      const t=e.touches[0];gesture.lastX=t.clientX;gesture.lastY=t.clientY;
+      const dx=t.clientX-gesture.x,dy=t.clientY-gesture.y;
+      if(!gesture.done&&Math.abs(dx)>48&&Math.abs(dx)>Math.abs(dy)*1.3){
+        gesture.done=true;
+        step(dx<0?1:-1);
+      }
     },{passive:true});
     featureViewport.addEventListener('touchend',e=>{
-      if(!touchStart || !matchMedia('(max-width: 700px)').matches){touchStart=null;return}
-      const t=e.changedTouches[0];
-      const dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;
-      touchStart=null;
-      if(Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*1.25)step(dx<0?1:-1);
+      if(!gesture)return;
+      if(!gesture.done&&mobile()){
+        const t=e.changedTouches[0],dx=t.clientX-gesture.x,dy=t.clientY-gesture.y;
+        if(Math.abs(dx)>48&&Math.abs(dx)>Math.abs(dy)*1.3)step(dx<0?1:-1);
+      }
+      gesture=null;
     },{passive:true});
-    featureViewport.addEventListener('touchcancel',()=>{touchStart=null},{passive:true});
+    featureViewport.addEventListener('touchcancel',()=>{gesture=null},{passive:true});
   }
   $('next').addEventListener('click',()=>step(1));
   $('prev').addEventListener('click',()=>step(-1));
@@ -232,23 +243,3 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initShelves);else initShelves();
 })();
 
-/* V6.39 — mobile bottom navigation clears the footer as it enters view. */
-(function(){
-  const nav=document.querySelector('.nav-bubble');
-  const footer=document.querySelector('.footer');
-  if(!nav||!footer)return;
-  let scheduled=false;
-  function update(){
-    scheduled=false;
-    if(!matchMedia('(max-width: 700px)').matches){nav.style.removeProperty('bottom');return}
-    const rect=footer.getBoundingClientRect();
-    const overlap=Math.max(0,innerHeight-rect.top);
-    const safe=17;
-    nav.style.bottom=`${Math.max(safe,overlap+16)}px`;
-  }
-  function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(update)}}
-  addEventListener('scroll',schedule,{passive:true});
-  addEventListener('resize',schedule,{passive:true});
-  document.addEventListener('DOMContentLoaded',schedule);
-  schedule();
-})();

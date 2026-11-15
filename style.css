@@ -1899,5 +1899,5 @@ html {
    while touch swipes horizontally advance the main image. */
 @media (max-width:700px) {
   .feature-viewport { touch-action:pan-y pinch-zoom; }
-  .nav-bubble { transition:bottom .12s ease-out; }
+  .nav-bubble { transition:transform .12s ease-out; }
 }
