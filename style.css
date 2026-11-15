@@ -1559,7 +1559,7 @@ html {
 .collections .project-image {
   box-shadow: inset 0 0 0 2px transparent;
   outline: 2px solid transparent;
-  outline-offset: -2px;
+  outline-offset: -1px;
   transition: outline-color .22s ease, box-shadow .22s ease;
 }
 .collections .project-card:hover .project-image,
@@ -1800,4 +1800,24 @@ html {
 .collection-view .art-tile img {
   object-fit: cover !important;
   object-position: center center !important;
+}
+/* V6.27: prevent stretched resume columns and reduce dead space. */
+.about-page .floating-brand { font-size: 1.05em !important; }
+.about-page .about-layout.about-editorial { max-width:1600px !important; padding-top:clamp(34px,4.5vw,65px) !important; padding-bottom:clamp(48px,5vw,80px) !important; }
+.about-page .about-editorial-grid { align-items:start !important; grid-template-columns:minmax(0,1fr) minmax(0,1.13fr) !important; gap:clamp(28px,4.5vw,70px) !important; }
+.about-page .about-story { min-height:0 !important; align-self:start !important; display:flex; flex-direction:column; padding-top:0 !important; max-width:none !important; }
+.about-page .about-me-label { margin:0 0 16px !important; padding:0 !important; }
+.about-page .resume-portrait { margin:0 0 16px !important; width:min(100%,490px) !important; }
+.about-page .about-story > p { margin:0 0 12px !important; line-height:1.65 !important; font-size:clamp(14px,1vw,16px) !important; }
+.about-page .about-connect { margin:8px 0 0 !important; padding:0 !important; gap:9px !important; }
+.about-page .about-resume { padding:clamp(22px,2.4vw,34px) !important; }
+.about-page .about-resume .resume-block { margin:0 !important; padding:19px 0 21px !important; }
+.about-page .about-resume .resume-block:first-child { padding-top:0 !important; }
+.about-page .about-resume .resume-block:last-child { padding-bottom:0 !important; }
+.about-page .about-resume .resume-block h2 { margin-bottom:17px !important; }
+.about-page .about-resume .skill-tags span { padding:7px 11px !important; }
+@media(max-width:800px) {
+ .about-page .about-editorial-grid { grid-template-columns:minmax(0,1fr) !important; gap:30px !important; }
+ .about-page .about-story { max-width:650px !important; }
+ .about-page .about-layout.about-editorial { padding-top:40px !important; }
 }
