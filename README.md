@@ -7,3 +7,5 @@ V6.9: balanced homepage name lockup; editorial two-column About/Resume layout in
 V6.10: About navigation renamed Resume; removed introductory heading/statement and unused PDF placeholder; About Me label sits directly above biography.
 
 V6.11: Resume page now includes collegiate football playing experience and clickable email/Instagram links with inline SVG icons.
+
+V6.19: Athletics moved to its own Resume section; horizontally scrollable category rows and artwork galleries; larger Resume type. The horizontal rows support trackpad, mouse wheel, touch swipe, and keyboard arrows when focused.

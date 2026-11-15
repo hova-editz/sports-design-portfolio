@@ -59,12 +59,39 @@
     if(Math.min(forward,backward)===1){step(forward===1?1:-1);return}
     active=index;position=index+1;renderSelection();setPosition(false);
   }
+  // Pointer swipe navigation on the main featured image, without blocking vertical scrolling.
+  const featureViewport=document.querySelector('.feature-viewport');
+  if(featureViewport){
+    let swipeStart=null;
+    featureViewport.addEventListener('pointerdown',e=>{
+      if(e.target.closest('button,a') || !e.isPrimary)return;
+      swipeStart={x:e.clientX,y:e.clientY,id:e.pointerId};
+    });
+    featureViewport.addEventListener('pointerup',e=>{
+      if(!swipeStart || e.pointerId!==swipeStart.id)return;
+      const dx=e.clientX-swipeStart.x,dy=e.clientY-swipeStart.y;
+      swipeStart=null;
+      if(Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.25)step(dx<0?1:-1);
+    });
+    featureViewport.addEventListener('pointercancel',()=>{swipeStart=null});
+    featureViewport.addEventListener('wheel',e=>{
+      // Two-finger horizontal trackpad gestures, not normal vertical page scroll.
+      if(Math.abs(e.deltaX)>Math.abs(e.deltaY)*1.4 && Math.abs(e.deltaX)>14){
+        e.preventDefault();
+        const now=performance.now();
+        if(!featureViewport._lastWheelStep || now-featureViewport._lastWheelStep>850){
+          featureViewport._lastWheelStep=now;
+          step(e.deltaX>0?1:-1);
+        }
+      }
+    },{passive:false});
+  }
   $('next').addEventListener('click',()=>step(1));
   $('prev').addEventListener('click',()=>step(-1));
   document.querySelectorAll('[data-dot]').forEach(b=>b.addEventListener('click',()=>jump(Number(b.dataset.dot))));
   document.querySelectorAll('[data-feature]').forEach(b=>b.addEventListener('click',()=>{jump(Number(b.dataset.feature));document.getElementById('featured-work')?.scrollIntoView({behavior:'smooth',block:'start'})}));
   renderSelection();setPosition(false);
-  const data={"collections":{"client-2026":[["assets/art/new-visit-copy.jpg","new visit copy"],["assets/art/concordia-gameday-2026.jpg","Concordia Gameday 2026"],["assets/art/captain-spotlight-2026.jpg","Captain Spotlight 2026"],["assets/art/halloween-gameweek-2026.png","Halloween Gameweek 2026"],["assets/art/sju-gameday-2026.jpg","SJU Gameday 2026"],["assets/art/good-luck-2026.jpg","Good Luck 2026"],["assets/art/bethel-gameday-graphic-copy.jpg","bethel gameday graphic copy"],["assets/art/bucket-history-2026.jpg","Bucket History 2026"],["assets/art/bethel-gameweek-copy.jpg","bethel gameweek copy"],["assets/art/homecoming-gameweek-2026.jpg","homecoming gameweek 2026"],["assets/art/crown-gameweek-2026.jpg","Crown Gameweek 2026"],["assets/art/olaf-gameweek-2026.png","Olaf Gameweek 2026"],["assets/art/crown-gameday-2026.jpg","Crown Gameday 2026"],["assets/art/bethel-gameday-copy.jpg","bethel gameday copy"],["assets/art/carleton-gameday-2026.png","Carleton Gameday 2026"],["assets/art/winter-visit-copy.jpg","winter visit copy"],["assets/art/concordia-gameweek-2026.jpg","Concordia Gameweek 2026"],["assets/art/halloween-gameday-2026.jpg","halloween gameday 2026"],["assets/art/carleton-gameweek-2026.jpg","Carleton Gameweek 2026"],["assets/art/sju-gameweek-2026.jpg","SJU Gameweek 2026"],["assets/art/committed-graphic-2026.jpg","Committed Graphic 2026"],["assets/art/homecoming-gameday-2026.jpg","homecoming gameday 2026"],["assets/art/gustavus-gameweek-2026.png","Gustavus Gameweek 2026"],["assets/art/gustavus-gameday-2026.png","gustavus gameday 2026"],["assets/art/hammer week.png","Hammer Week 2026"],["assets/art/st olaf gameday 2026.png","St. Olaf Gameday 2026"],["assets/art/hammer-week-v6.png","Hammer Week"],["assets/art/augsburg-gameday-v6.jpg","Augsburg Gameday"]],"client-2025":[["assets/art/gustavus-gameweek-2025.jpg","Gustavus Gameweek 2025"],["assets/art/augsburg-gameday-2025.jpg","Augsburg Gameday 2025"],["assets/art/halloween-gameweek-2025.jpg","Halloween Gameweek 2025"],["assets/art/carleton-gameday-2025.jpg","Carleton Gameday 2025"],["assets/art/augsburg-gameweek-2025.jpg","Augsburg Gameweek 2025"],["assets/art/halloween-gameday-2025.jpg","Halloween Gameday 2025"],["assets/art/carleton-gameweek-2025.jpg","Carleton Gameweek 2025"],["assets/art/olaf-gameday-2025.jpg","Olaf Gameday 2025"],["assets/art/gustavus-gameday-2025.jpg","gustavus gameday 2025"]],"sport-basketball":[["assets/art/kyrie-irving.png","Kyrie Irving"],["assets/art/brunson-copy-2.jpg","brunson copy 2"],["assets/art/final-decision-lebron.jpg","Final Decision Lebron"],["assets/art/kobe-bryant.jpg","Kobe Bryant"],["assets/art/jordan-poster.jpg","Jordan Poster"],["assets/art/allen-iverson.jpg","Allen Iverson"]],"sport-football":[["assets/art/ps2.jpg","PS2"],["assets/art/jeremiah-smith.jpg","Jeremiah Smith"],["assets/art/lamar-jackson.jpg","Lamar Jackson"],["assets/art/jsn.jpg","JSN"],["assets/art/ceedee-v6.png","CeeDee"],["assets/art/jamarr-v6.png","Ja'Marr"]],"sport-baseball":[["assets/art/shohei-ohtani.jpg","Shohei Ohtani"]],"sport-motorsport":[["assets/art/hamilton-1-copy.jpg","hamilton 1 copy"]],"sport-soccer":[["assets/art/wc-final.jpg","WC Final"],["assets/art/jose-quinones.jpg","Jose Quinones"]]},"covers":{"client-2026":["Hamline Football","2026","assets/art/hammer-week-v6.png"],"client-2025":["Hamline Football","2025","assets/art/gustavus-gameweek-2025.jpg"],"sport-basketball":["Basketball","Personal projects","assets/art/kyrie-irving.png"],"sport-football":["Football","Personal projects","assets/art/ceedee-v6.png"],"sport-baseball":["Baseball","Personal projects","assets/art/shohei-ohtani.jpg"],"sport-motorsport":["Motorsport","Personal projects","assets/art/hamilton-1-copy.jpg"],"sport-soccer":["Soccer","Personal projects","assets/art/wc-final.jpg"]},"featured":["assets/art/final-decision-lebron.jpg", "assets/art/jamarr-v6.png", "assets/art/kyrie-irving.png", "assets/art/ceedee-v6.png", "assets/art/jordan-poster.jpg", "assets/art/halloween-gameweek-2026.png", "assets/art/bucket-history-2026.jpg", "assets/art/homecoming-gameweek-2026.jpg", "assets/art/sju-gameday-2026.jpg", "assets/art/st olaf gameday 2026.png"]};
+  const data={"collections":{"client-2026":[["assets/art/halloween-gameweek-2026.png","Halloween Gameweek 2026"],["assets/art/homecoming-gameweek-2026.jpg","homecoming gameweek 2026"],["assets/art/st olaf gameday 2026.png","St. Olaf Gameday 2026"],["assets/art/concordia-gameweek-2026.jpg","Concordia Gameweek 2026"],["assets/art/halloween-gameday-2026.jpg","halloween gameday 2026"],["assets/art/sju-gameweek-2026.jpg","SJU Gameweek 2026"],["assets/art/crown-gameweek-2026.jpg","Crown Gameweek 2026"],["assets/art/bethel-gameweek-copy.jpg","bethel gameweek copy"],["assets/art/homecoming-gameday-2026.jpg","homecoming gameday 2026"],["assets/art/good-luck-2026.jpg","Good Luck 2026"],["assets/art/new-visit-copy.jpg","new visit copy"],["assets/art/concordia-gameday-2026.jpg","Concordia Gameday 2026"],["assets/art/sju-gameday-2026.jpg","SJU Gameday 2026"],["assets/art/bucket-history-2026.jpg","Bucket History 2026"],["assets/art/olaf-gameweek-2026.png","Olaf Gameweek 2026"],["assets/art/bethel-gameday-copy.jpg","bethel gameday copy"],["assets/art/carleton-gameday-2026.png","Carleton Gameday 2026"],["assets/art/carleton-gameweek-2026.jpg","Carleton Gameweek 2026"],["assets/art/committed-graphic-2026.jpg","Committed Graphic 2026"],["assets/art/gustavus-gameweek-2026.png","Gustavus Gameweek 2026"],["assets/art/gustavus-gameday-2026.png","gustavus gameday 2026"],["assets/art/hammer-week-v6.png","Hammer Week"],["assets/art/augsburg-gameday-v6.jpg","Augsburg Gameday"],["assets/art/captain-spotlight-2026.jpg","Captain Spotlight 2026"],["assets/art/winter-visit-copy.jpg","winter visit copy"],["assets/art/crown-gameday-2026.jpg","Crown Gameday 2026"]],"client-2025":[["assets/art/gustavus-gameweek-2025.jpg","Gustavus Gameweek 2025"],["assets/art/halloween-gameweek-2025.jpg","Halloween Gameweek 2025"],["assets/art/carleton-gameday-2025.jpg","Carleton Gameday 2025"],["assets/art/olaf-gameday-2025.jpg","Olaf Gameday 2025"],["assets/art/augsburg-gameday-2025.jpg","Augsburg Gameday 2025"],["assets/art/augsburg-gameweek-2025.jpg","Augsburg Gameweek 2025"],["assets/art/halloween-gameday-2025.jpg","Halloween Gameday 2025"],["assets/art/carleton-gameweek-2025.jpg","Carleton Gameweek 2025"],["assets/art/gustavus-gameday-2025.jpg","gustavus gameday 2025"],["assets/art/bethel-gameday-graphic-copy.jpg","bethel gameday graphic copy"]],"sport-basketball":[["assets/art/kyrie-irving.png","Kyrie Irving"],["assets/art/brunson-copy-2.jpg","brunson copy 2"],["assets/art/final-decision-lebron.jpg","Final Decision Lebron"],["assets/art/kobe-bryant.jpg","Kobe Bryant"],["assets/art/jordan-poster.jpg","Jordan Poster"],["assets/art/allen-iverson.jpg","Allen Iverson"]],"sport-football":[["assets/art/ps2.jpg","PS2"],["assets/art/jeremiah-smith.jpg","Jeremiah Smith"],["assets/art/lamar-jackson.jpg","Lamar Jackson"],["assets/art/jsn.jpg","JSN"],["assets/art/ceedee-v6.png","CeeDee"],["assets/art/jamarr-v6.png","Ja'Marr"]],"sport-baseball":[["assets/art/shohei-ohtani.jpg","Shohei Ohtani"]],"sport-motorsport":[["assets/art/hamilton-1-copy.jpg","hamilton 1 copy"]],"sport-soccer":[["assets/art/wc-final.jpg","WC Final"],["assets/art/jose-quinones.jpg","Jose Quinones"]]},"covers":{"client-2026":["Hamline Football","2026","assets/art/halloween-gameweek-2026.png"],"client-2025":["Hamline Football","2025","assets/art/gustavus-gameweek-2025.jpg"],"sport-basketball":["Basketball","Personal projects","assets/art/kyrie-irving.png"],"sport-football":["Football","Personal projects","assets/art/jamarr-v6.png"],"sport-baseball":["Baseball","Personal projects","assets/art/shohei-ohtani.jpg"],"sport-motorsport":["Motorsport","Personal projects","assets/art/hamilton-1-copy.jpg"],"sport-soccer":["Soccer","Personal projects","assets/art/wc-final.jpg"]},"featured":["assets/art/final-decision-lebron.jpg","assets/art/jamarr-v6.png","assets/art/kyrie-irving.png","assets/art/ceedee-v6.png","assets/art/jordan-poster.jpg","assets/art/halloween-gameweek-2026.png","assets/art/bucket-history-2026.jpg","assets/art/homecoming-gameweek-2026.jpg","assets/art/sju-gameday-2026.jpg","assets/art/st olaf gameday 2026.png"]};
   const collections=$('collections'),detail=$('collection-view'),feature=document.querySelector('.feature-section');
   function openCollection(key){
     const items=data.collections[key];if(!items)return;
@@ -127,4 +154,83 @@
   document.addEventListener('pointerdown',()=>cursor.classList.add('pressed'));
   document.addEventListener('pointerup',()=>cursor.classList.remove('pressed'));
   requestAnimationFrame(animate);
+})();
+
+/* V6.18 — fades content into view and gently out in either scroll direction.
+   No hidden-on-load state: the page remains readable without JavaScript. */
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const targets=[...document.querySelectorAll('.intro-section, .feature-viewport, .featured-shelf, .section-line, .project-card, .about-story, .resume-block')];
+  if(!targets.length)return;
+  targets.forEach(el=>el.classList.add('scroll-fade'));
+  let pending=false;
+  function update(){
+    pending=false;
+    const h=window.innerHeight;
+    targets.forEach(el=>{
+      if(el.closest('[hidden]'))return;
+      const r=el.getBoundingClientRect();
+      if(r.bottom < -100 || r.top > h+100)return;
+      // Each element gradually appears near the bottom and fades near the top.
+      const entering=Math.max(0,Math.min(1,(h-r.top)/(h*.28)));
+      const leaving=Math.max(0,Math.min(1,r.bottom/(h*.22)));
+      const visibility=Math.max(.18,Math.min(entering,leaving));
+      el.style.setProperty('--scroll-visibility',visibility.toFixed(3));
+      el.style.setProperty('--scroll-shift',((1-visibility)*8).toFixed(1)+'px');
+    });
+  }
+  function schedule(){if(!pending){pending=true;requestAnimationFrame(update)}}
+  addEventListener('scroll',schedule,{passive:true});
+  addEventListener('resize',schedule);
+  new MutationObserver(schedule).observe(document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});
+  schedule();
+})();
+
+/* V6.19: horizontal row scrolling with trackpad, mouse wheel and keyboard. */
+(function(){
+  function enableHorizontalRows(){
+    document.querySelectorAll('.horizontal-card-row,.horizontal-art-row').forEach(row=>{
+      if(row.dataset.horizontalReady)return;row.dataset.horizontalReady='true';
+      row.addEventListener('wheel',e=>{
+        if(!row.scrollWidth || row.scrollWidth<=row.clientWidth+2)return;
+        const delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
+        const atStart=row.scrollLeft<=1 && delta<0;
+        const atEnd=row.scrollLeft+row.clientWidth>=row.scrollWidth-2 && delta>0;
+        if(atStart||atEnd)return;
+        e.preventDefault();row.scrollLeft+=delta;
+      },{passive:false});
+      row.addEventListener('keydown',e=>{
+        if(e.target!==row || !['ArrowLeft','ArrowRight'].includes(e.key))return;
+        e.preventDefault();row.scrollBy({left:e.key==='ArrowRight'?280:-280,behavior:'smooth'});
+      });
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enableHorizontalRows);else enableHorizontalRows();
+})();
+
+/* V6.20: visible shelf navigation, including cards that extend off-screen. */
+(function(){
+  function initShelves(){
+    document.querySelectorAll('.slider-shell').forEach(shell=>{
+      const row=shell.querySelector('.horizontal-card-row,.horizontal-art-row');
+      if(!row)return;
+      const prev=shell.querySelector('.row-arrow-prev'),next=shell.querySelector('.row-arrow-next');
+      function update(){
+        const overflow=row.scrollWidth>row.clientWidth+3;
+        prev.disabled=!overflow||row.scrollLeft<=2;
+        next.disabled=!overflow||row.scrollLeft+row.clientWidth>=row.scrollWidth-3;
+        prev.setAttribute('aria-hidden',String(prev.disabled));
+        next.setAttribute('aria-hidden',String(next.disabled));
+      }
+      const step=()=>Math.max(200,Math.round(row.clientWidth*.7));
+      prev.addEventListener('click',()=>row.scrollBy({left:-step(),behavior:'smooth'}));
+      next.addEventListener('click',()=>row.scrollBy({left:step(),behavior:'smooth'}));
+      row.addEventListener('scroll',update,{passive:true});
+      window.addEventListener('resize',update,{passive:true});
+      new ResizeObserver(update).observe(row);
+      new MutationObserver(update).observe(row,{childList:true});
+      update();
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initShelves);else initShelves();
 })();

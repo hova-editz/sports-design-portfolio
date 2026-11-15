@@ -11,13 +11,13 @@
   <script defer="" src="script.js">
   </script>
   <title>
-   Juan Bertaud &mdash; Sports Graphic Designer
+   Juan Bertaud — Sports Graphic Designer
   </title>
  </head>
  <body class="portfolio-page">
   <header class="floating-header">
    <nav aria-label="Main navigation" class="nav-bubble">
-    <a class="nav-portfolio" href="#featured-work" aria-label="Go to featured portfolio artwork">
+    <a aria-label="Go to featured portfolio artwork" class="nav-portfolio" href="#featured-work">
      Portfolio
     </a>
     <a class="nav-about" href="about.html">
@@ -72,10 +72,10 @@
       </div>
      </div>
      <button aria-label="Previous featured artwork" class="hero-arrow hero-prev" id="prev">
-      &lsaquo;
+      ‹
      </button>
      <button aria-label="Next featured artwork" class="hero-arrow hero-next" id="next">
-      &rsaquo;
+      ›
      </button>
      <div aria-label="Choose featured artwork" class="feature-dots">
       <button aria-current="true" aria-label="Show Final Decision LeBron" class="feature-dot active" data-dot="0">
@@ -149,35 +149,43 @@
       Official Work
      </h2>
      <span class="section-detail">
-      Hamline Football &middot; Graphic design internship
+      Hamline Football · Graphic design internship
      </span>
     </div>
-    <div class="cards-grid">
-     <button aria-label="View Hamline Football 2026" class="project-card" data-open="client-2026">
-      <span class="project-image">
-       <img alt="" loading="lazy" src="assets/art/hammer-week-v6.png"/>
-      </span>
-      <span class="project-info">
-       <span>
-        Hamline Football
-        <small>
-         2026
-        </small>
-       </span>
-      </span>
+    <div class="slider-shell">
+     <button aria-label="Scroll prev through artwork" class="row-arrow row-arrow-prev" type="button">
+      ‹
      </button>
-     <button aria-label="View Hamline Football 2025" class="project-card" data-open="client-2025">
-      <span class="project-image">
-       <img alt="" loading="lazy" src="assets/art/gustavus-gameweek-2025.jpg"/>
-      </span>
-      <span class="project-info">
-       <span>
-        Hamline Football
-        <small>
-         2025
-        </small>
+     <div aria-label="Scroll horizontally through project categories" class="cards-grid horizontal-card-row" tabindex="0">
+      <button aria-label="View Hamline Football 2026" class="project-card" data-open="client-2026">
+       <span class="project-image">
+        <img alt="" loading="lazy" src="assets/art/hammer-week-v6.png"/>
        </span>
-      </span>
+       <span class="project-info">
+        <span>
+         Hamline Football
+         <small>
+          2026
+         </small>
+        </span>
+       </span>
+      </button>
+      <button aria-label="View Hamline Football 2025" class="project-card" data-open="client-2025">
+       <span class="project-image">
+        <img alt="" loading="lazy" src="assets/art/gustavus-gameweek-2025.jpg"/>
+       </span>
+       <span class="project-info">
+        <span>
+         Hamline Football
+         <small>
+          2025
+         </small>
+        </span>
+       </span>
+      </button>
+     </div>
+     <button aria-label="Scroll next through artwork" class="row-arrow row-arrow-next" type="button">
+      ›
      </button>
     </div>
     <div class="section-line section-spaced">
@@ -188,56 +196,64 @@
       Independent sports design
      </span>
     </div>
-    <div class="cards-grid">
-     <button aria-label="View Basketball Personal projects" class="project-card" data-open="sport-basketball">
-      <span class="project-image">
-       <img alt="" loading="lazy" src="assets/art/kyrie-irving.png"/>
-      </span>
-      <span class="project-info">
-       <span>
-        Basketball
-       </span>
-      </span>
+    <div class="slider-shell">
+     <button aria-label="Scroll prev through artwork" class="row-arrow row-arrow-prev" type="button">
+      ‹
      </button>
-     <button aria-label="View Football Personal projects" class="project-card" data-open="sport-football">
-      <span class="project-image">
-       <img alt="" loading="lazy" src="assets/art/ceedee-v6.png"/>
-      </span>
-      <span class="project-info">
-       <span>
-        Football
+     <div aria-label="Scroll horizontally through project categories" class="cards-grid horizontal-card-row" tabindex="0">
+      <button aria-label="View Basketball Personal projects" class="project-card" data-open="sport-basketball">
+       <span class="project-image">
+        <img alt="" loading="lazy" src="assets/art/kyrie-irving.png"/>
        </span>
-      </span>
-     </button>
-     <button aria-label="View Baseball Personal projects" class="project-card" data-open="sport-baseball">
-      <span class="project-image">
-       <img alt="" loading="lazy" src="assets/art/shohei-ohtani.jpg"/>
-      </span>
-      <span class="project-info">
-       <span>
-        Baseball
+       <span class="project-info">
+        <span>
+         Basketball
+        </span>
        </span>
-      </span>
-     </button>
-     <button aria-label="View Motorsport Personal projects" class="project-card" data-open="sport-motorsport">
-      <span class="project-image">
-       <img alt="" loading="lazy" src="assets/art/hamilton-1-copy.jpg"/>
-      </span>
-      <span class="project-info">
-       <span>
-        Motorsport
+      </button>
+      <button aria-label="View Football Personal projects" class="project-card" data-open="sport-football">
+       <span class="project-image">
+        <img alt="" loading="lazy" src="assets/art/ceedee-v6.png"/>
        </span>
-      </span>
-     </button>
-     <button aria-label="View Soccer Personal projects" class="project-card" data-open="sport-soccer">
-      <span class="project-image">
-       <img alt="" loading="lazy" src="assets/art/wc-final.jpg"/>
-      </span>
-      <span class="project-info">
-       <span>
-        Soccer
+       <span class="project-info">
+        <span>
+         Football
+        </span>
        </span>
-      </span>
+      </button>
+      <button aria-label="View Baseball Personal projects" class="project-card" data-open="sport-baseball">
+       <span class="project-image">
+        <img alt="" loading="lazy" src="assets/art/shohei-ohtani.jpg"/>
+       </span>
+       <span class="project-info">
+        <span>
+         Baseball
+        </span>
+       </span>
+      </button>
+      <button aria-label="View Motorsport Personal projects" class="project-card" data-open="sport-motorsport">
+       <span class="project-image">
+        <img alt="" loading="lazy" src="assets/art/hamilton-1-copy.jpg"/>
+       </span>
+       <span class="project-info">
+        <span>
+         Motorsport
+        </span>
+       </span>
+      </button>
+      <button aria-label="View Soccer Personal projects" class="project-card" data-open="sport-soccer">
+       <span class="project-image">
+        <img alt="" loading="lazy" src="assets/art/wc-final.jpg"/>
+       </span>
+       <span class="project-info">
+        <span>
+         Soccer
+        </span>
+       </span>
+      </button>
+     </div>
+     <button aria-label="Scroll next through artwork" class="row-arrow row-arrow-next" type="button">
+      ›
      </button>
     </div>
    </section>
@@ -251,13 +267,13 @@
      <p id="collection-subtitle">
      </p>
     </div>
-    <div class="art-grid" id="art-grid">
+    <div class="art-grid vertical-art-grid" id="art-grid">
     </div>
    </section>
   </main>
   <div aria-label="Artwork viewer" aria-modal="true" class="lightbox" hidden="" id="lightbox" role="dialog">
    <button aria-label="Close artwork" class="lightbox-close" id="lightbox-close">
-    &times;
+    ×
    </button>
    <button aria-label="Previous artwork" class="lightbox-prev" id="lightbox-prev">
     <span class="sr-only">
@@ -273,7 +289,7 @@
   </div>
   <footer class="footer">
    <span>
-    &copy; 2026 Juan Bertaud
+    © 2026 Juan Bertaud
    </span>
    <div>
     <a href="https://www.instagram.com/jb.designs___/" rel="noopener" target="_blank">

@@ -1559,7 +1559,7 @@ html {
 .collections .project-image {
   box-shadow: inset 0 0 0 2px transparent;
   outline: 2px solid transparent;
-  outline-offset: -1px;
+  outline-offset: -2px;
   transition: outline-color .22s ease, box-shadow .22s ease;
 }
 .collections .project-card:hover .project-image,
@@ -1573,3 +1573,131 @@ html {
     gap: 12px;
   }
 }
+
+/* V6.18 — portrait and reversible scroll-responsive fade */
+.resume-portrait { margin: 18px 0 26px; width: min(100%, 355px); overflow: hidden; border-radius: 7px; background: #1c1c1c; }
+.resume-portrait img { display: block; width: 100%; height: auto; object-fit: contain; }
+.scroll-fade { opacity: var(--scroll-visibility, 1); transform: translate3d(0, var(--scroll-shift, 0px), 0); will-change: opacity, transform; }
+@media (prefers-reduced-motion: reduce) { .scroll-fade { opacity: 1 !important; transform: none !important; will-change: auto; } }
+@media(max-width:700px) { .resume-portrait { width: min(100%, 310px); } }
+
+/* V6.19: horizontal galleries and more legible resume */
+.collections .cards-grid.horizontal-card-row {display:flex!important;flex-wrap:nowrap!important;gap:14px!important;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#555 transparent;padding:3px 2px 16px;}
+.collections .horizontal-card-row .project-card {flex:0 0 clamp(160px,21vw,300px)!important;width:clamp(160px,21vw,300px)!important;max-width:none!important;scroll-snap-align:start;}
+.collections .horizontal-card-row .project-image {height:clamp(120px,14vw,185px)!important;}
+.art-grid.horizontal-art-row {display:flex!important;flex-wrap:nowrap!important;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#555 transparent;padding:3px 2px 18px;}
+.horizontal-art-row .art-tile {flex:0 0 clamp(210px,28vw,360px);height:clamp(300px,37vw,480px);aspect-ratio:auto;scroll-snap-align:start;}
+.about-page .about-layout {max-width:1100px;}
+.about-page .about-lead,.about-page .about-bio p {font-size:15px;line-height:1.8;}
+.about-page .resume-block h2 {font-size:16px;}
+.about-page .resume-entry h3 {font-size:16px;}
+.about-page .resume-entry p {font-size:14px;}
+.about-page .resume-entry>span {font-size:13px;}
+.about-page .skill-tags span {font-size:13px;}
+@media(max-width:520px){.collections .horizontal-card-row .project-card{flex-basis:170px!important;width:170px!important}.collections .horizontal-card-row .project-image{height:120px!important}.horizontal-art-row .art-tile{flex-basis:76vw;height:105vw;max-height:480px}}
+/* Keep the standard pointer hidden while the custom cursor is active, including on scrolling containers */
+@media(hover:hover) and (pointer:fine){html.has-custom-cursor,html.has-custom-cursor *,html.has-custom-cursor *::before,html.has-custom-cursor *::after{cursor:none!important}}
+
+/* V6.20 — wide Apple TV-style horizontal project shelves */
+.collections, .collection-view {
+  max-width: none !important;
+  width: 100%;
+  padding-left: clamp(18px, 3vw, 54px) !important;
+  padding-right: clamp(18px, 3vw, 54px) !important;
+}
+.collections .slider-shell, .collection-view .slider-shell { position: relative; width: 100%; min-width: 0; }
+.collections .cards-grid.horizontal-card-row,
+.collection-view .art-grid.horizontal-art-row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  width: 100%;
+  gap: 14px !important;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  padding: 3px 2px 15px !important;
+  -webkit-overflow-scrolling: touch;
+}
+.collections .cards-grid.horizontal-card-row::-webkit-scrollbar,
+.collection-view .art-grid.horizontal-art-row::-webkit-scrollbar { display: none; }
+.collections .horizontal-card-row .project-card {
+  flex: 0 0 clamp(190px, 21vw, 300px) !important;
+  width: clamp(190px, 21vw, 300px) !important;
+}
+.collections .horizontal-card-row .project-image { height: clamp(120px,14vw,185px) !important; }
+.row-arrow {
+  position: absolute;
+  z-index: 7;
+  top: 42%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 70px;
+  border: 0;
+  border-radius: 10px;
+  color: rgba(245,241,232,.85);
+  background: rgba(16,16,16,.5);
+  backdrop-filter: blur(8px);
+  font-size: 32px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity .2s, background .2s;
+}
+.slider-shell:hover .row-arrow:not(:disabled),
+.row-arrow:focus-visible { opacity: .85; }
+.row-arrow:hover:not(:disabled) { background: rgba(16,16,16,.75); }
+.row-arrow:disabled { opacity: 0 !important; pointer-events: none; }
+.row-arrow-prev { left: 4px; }
+.row-arrow-next { right: 4px; }
+@media (hover: none) {
+  .row-arrow:not(:disabled) { opacity: .75; width: 32px; height: 55px; font-size: 26px; }
+}
+@media(max-width:520px) {
+  .collections .horizontal-card-row .project-card { flex-basis: 210px !important; width: 210px !important; }
+  .collections .horizontal-card-row .project-image { height: 120px !important; }
+}
+
+/* V6.20 — larger, roomier resume with a stronger editorial hierarchy */
+.about-page .about-layout.about-editorial {
+  max-width: 1700px !important;
+  width: 100%;
+  padding: clamp(105px, 10vw, 155px) clamp(24px, 4vw, 80px) 130px !important;
+}
+.about-page .about-editorial-grid {
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 1.16fr);
+  gap: clamp(45px, 6vw, 110px);
+}
+.about-page .about-story { max-width: 650px; }
+.about-page .resume-portrait { width: min(100%, 490px); margin-top: 24px; margin-bottom: 35px; }
+.about-page .about-me-label { font-size: 14px; margin-bottom: 20px; }
+.about-page .about-story>p, .about-page .about-bio p { font-size: clamp(16px, 1.15vw, 18px); line-height: 1.8; }
+.about-page .resume-block { padding: 34px 0 40px; margin-bottom: 22px; }
+.about-page .resume-block h2 { font-size: clamp(20px, 1.6vw, 25px); margin-bottom: 27px; }
+.about-page .resume-entry h3 { font-size: clamp(16px, 1.2vw, 19px); }
+.about-page .resume-entry p { font-size: 15px; }
+.about-page .resume-entry>span { font-size: 14px; }
+.about-page .skill-tags span { font-size: 14px; }
+.about-page .about-connect a { font-size: 16px; }
+@media(max-width:800px) {
+  .about-page .about-editorial-grid { grid-template-columns: 1fr; gap: 55px; }
+  .about-page .about-story { max-width: 700px; }
+  .about-page .resume-portrait { width: min(100%, 490px); }
+}
+
+/* V6.21: permit horizontal swipes while keeping normal vertical scrolling. */
+.feature-viewport { touch-action: pan-y pinch-zoom; }
+
+/* V6.22: vertically scrolling ranked artwork within collections. */
+.collection-view .art-grid.vertical-art-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  gap: clamp(14px,2vw,28px) !important;
+  overflow: visible !important;
+  width: 100% !important;
+  padding: 0 !important;
+  scroll-snap-type: none !important;
+}
+.collection-view .vertical-art-grid .art-tile { width: 100% !important; min-width: 0 !important; max-width: none !important; flex: none !important; }
+@media(max-width:850px){.collection-view .art-grid.vertical-art-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
+@media(max-width:520px){.collection-view .art-grid.vertical-art-grid{grid-template-columns:1fr !important;}}
