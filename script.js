@@ -159,8 +159,10 @@
   schedule();
 })();
 
-/* V6.24: Mac trackpad horizontal and vertical-wheel-to-horizontal scrolling.
-   Attach to the entire shelf, including gaps between the cards. */
+/* V6.35: reliable Mac trackpad scrolling for project-category shelves.
+   Horizontal gestures retain their direction; vertical wheel motion also moves
+   a shelf horizontally while the pointer is over it. Let page scrolling resume
+   at either end. Featured carousel is intentionally excluded. */
 (function(){
   function enableHorizontalRows(){
     document.querySelectorAll('.slider-shell').forEach(shell=>{
@@ -168,23 +170,31 @@
       if(!row || shell.dataset.trackpadReady)return;
       shell.dataset.trackpadReady='true';
       shell.addEventListener('wheel',e=>{
-        if(e.ctrlKey || row.scrollWidth<=row.clientWidth+2)return;
+        if(e.ctrlKey || e.metaKey || e.defaultPrevented)return;
+        const maxScroll=Math.max(0,row.scrollWidth-row.clientWidth);
+        if(maxScroll<2)return;
+        // Use the dominant axis for both two-finger horizontal swipes and
+        // ordinary mouse-wheel / vertical trackpad gestures.
         const dx=e.deltaX,dy=e.deltaY;
-        const delta=Math.abs(dx)>Math.abs(dy)?dx:dy;
-        if(Math.abs(delta)<.01)return;
-        const start=row.scrollLeft<=1&&delta<0;
-        const end=row.scrollLeft+row.clientWidth>=row.scrollWidth-2&&delta>0;
-        if(start||end)return;
+        let delta=Math.abs(dx)>=Math.abs(dy)?dx:dy;
+        if(e.deltaMode===1)delta*=16;
+        else if(e.deltaMode===2)delta*=row.clientWidth;
+        if(Math.abs(delta)<0.1)return;
+        const current=row.scrollLeft;
+        const target=Math.min(maxScroll,Math.max(0,current+delta));
+        if(Math.abs(target-current)<0.1)return;
         e.preventDefault();
-        row.scrollLeft+=delta;
-      },{passive:false});
+        row.scrollLeft=target;
+      },{passive:false,capture:true});
       row.addEventListener('keydown',e=>{
         if(e.target!==row||!['ArrowLeft','ArrowRight'].includes(e.key))return;
-        e.preventDefault();row.scrollBy({left:e.key==='ArrowRight'?280:-280,behavior:'smooth'});
+        e.preventDefault();
+        row.scrollBy({left:e.key==='ArrowRight'?280:-280,behavior:'smooth'});
       });
     });
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enableHorizontalRows);else enableHorizontalRows();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enableHorizontalRows);
+  else enableHorizontalRows();
 })();
 
 /* V6.20: visible shelf navigation, including cards that extend off-screen. */
