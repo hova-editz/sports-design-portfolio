@@ -1724,7 +1724,7 @@ html {
 .collections .horizontal-card-row .project-card { scroll-snap-align:start; }
 .collections .horizontal-card-row .project-image {
   outline:2px solid transparent;
-  outline-offset:-1px;
+  outline-offset:-2px;
 
 }
 .collections .horizontal-card-row .project-card:is(:hover,:focus-visible,:active) .project-image {
@@ -1830,4 +1830,29 @@ html {
 .collections .horizontal-card-row .project-image,
 .collections .horizontal-card-row .project-card:is(:hover,:focus-visible,:active) .project-image {
   box-shadow: none !important;
+}
+
+/* V6.29 — keep the Resume footer at the bottom of the viewport
+   at reduced browser zoom, without making the footer itself taller. */
+.about-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.about-page main.about-layout {
+  flex: 1 0 auto;
+  min-height: 0 !important;
+}
+.about-page .footer {
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-top: 20px !important;
+  padding-bottom: 24px !important;
+}
+/* Keep the project-card stroke at 2px with a -1px offset. */
+.collections .horizontal-card-row .project-image {
+  outline-width: 2px !important;
+  outline-style: solid !important;
+  outline-offset: -1px !important;
 }
