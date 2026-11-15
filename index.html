@@ -17,7 +17,7 @@
  <body class="portfolio-page">
   <header class="floating-header">
    <nav aria-label="Main navigation" class="nav-bubble">
-    <a class="nav-portfolio" href="#featured-work">
+    <a class="nav-portfolio" href="#featured-work" aria-label="Go to featured portfolio artwork">
      Portfolio
     </a>
     <a class="nav-about" href="about.html">
@@ -41,28 +41,34 @@
     <div class="feature-viewport">
      <div class="feature-track">
       <div aria-hidden="false" class="feature-slide is-active" data-slide="0">
-       <img alt="Featured sports artwork 1" fetchpriority="high" src="assets/art/hammer-week-v6.png"/>
+       <img alt="Final Decision LeBron" fetchpriority="high" loading="eager" src="assets/art/final-decision-lebron.jpg"/>
       </div>
       <div aria-hidden="true" class="feature-slide" data-slide="1">
-       <img alt="Featured sports artwork 2" loading="lazy" src="assets/art/kyrie-irving.png"/>
+       <img alt="Ja'Marr" fetchpriority="auto" loading="lazy" src="assets/art/jamarr-v6.png"/>
       </div>
       <div aria-hidden="true" class="feature-slide" data-slide="2">
-       <img alt="Featured sports artwork 3" loading="lazy" src="assets/art/augsburg-gameday-v6.jpg"/>
+       <img alt="Kyrie" fetchpriority="auto" loading="lazy" src="assets/art/kyrie-irving.png"/>
       </div>
       <div aria-hidden="true" class="feature-slide" data-slide="3">
-       <img alt="Featured sports artwork 4" loading="lazy" src="assets/art/ceedee-v6.png"/>
+       <img alt="CeeDee" fetchpriority="auto" loading="lazy" src="assets/art/ceedee-v6.png"/>
       </div>
       <div aria-hidden="true" class="feature-slide" data-slide="4">
-       <img alt="Featured sports artwork 5" loading="lazy" src="assets/art/gustavus-gameweek-2025.jpg"/>
+       <img alt="Jordan Poster" fetchpriority="auto" loading="lazy" src="assets/art/jordan-poster.jpg"/>
       </div>
       <div aria-hidden="true" class="feature-slide" data-slide="5">
-       <img alt="Featured sports artwork 6" loading="lazy" src="assets/art/shohei-ohtani.jpg"/>
+       <img alt="Halloween Gameweek 2026" fetchpriority="auto" loading="lazy" src="assets/art/halloween-gameweek-2026.png"/>
       </div>
       <div aria-hidden="true" class="feature-slide" data-slide="6">
-       <img alt="Featured sports artwork 7" loading="lazy" src="assets/art/jamarr-v6.png"/>
+       <img alt="Bucket History 2026" fetchpriority="auto" loading="lazy" src="assets/art/bucket-history-2026.jpg"/>
       </div>
       <div aria-hidden="true" class="feature-slide" data-slide="7">
-       <img alt="Featured sports artwork 8" loading="lazy" src="assets/art/hamilton-1-copy.jpg"/>
+       <img alt="Homecoming Gameweek 2026" fetchpriority="auto" loading="lazy" src="assets/art/homecoming-gameweek-2026.jpg"/>
+      </div>
+      <div aria-hidden="true" class="feature-slide" data-slide="8">
+       <img alt="SJU Gameday 2026" fetchpriority="auto" loading="lazy" src="assets/art/sju-gameday-2026.jpg"/>
+      </div>
+      <div aria-hidden="true" class="feature-slide" data-slide="9">
+       <img alt="St. Olaf Gameday 2026" fetchpriority="auto" loading="lazy" src="assets/art/st olaf gameday 2026.png"/>
       </div>
      </div>
      <button aria-label="Previous featured artwork" class="hero-arrow hero-prev" id="prev">
@@ -72,21 +78,25 @@
       &rsaquo;
      </button>
      <div aria-label="Choose featured artwork" class="feature-dots">
-      <button aria-current="true" aria-label="Show featured artwork 1" class="feature-dot active" data-dot="0">
+      <button aria-current="true" aria-label="Show Final Decision LeBron" class="feature-dot active" data-dot="0">
       </button>
-      <button aria-current="false" aria-label="Show featured artwork 2" class="feature-dot" data-dot="1">
+      <button aria-current="false" aria-label="Show Ja'Marr" class="feature-dot" data-dot="1">
       </button>
-      <button aria-current="false" aria-label="Show featured artwork 3" class="feature-dot" data-dot="2">
+      <button aria-current="false" aria-label="Show Kyrie" class="feature-dot" data-dot="2">
       </button>
-      <button aria-current="false" aria-label="Show featured artwork 4" class="feature-dot" data-dot="3">
+      <button aria-current="false" aria-label="Show CeeDee" class="feature-dot" data-dot="3">
       </button>
-      <button aria-current="false" aria-label="Show featured artwork 5" class="feature-dot" data-dot="4">
+      <button aria-current="false" aria-label="Show Jordan Poster" class="feature-dot" data-dot="4">
       </button>
-      <button aria-current="false" aria-label="Show featured artwork 6" class="feature-dot" data-dot="5">
+      <button aria-current="false" aria-label="Show Halloween Gameweek 2026" class="feature-dot" data-dot="5">
       </button>
-      <button aria-current="false" aria-label="Show featured artwork 7" class="feature-dot" data-dot="6">
+      <button aria-current="false" aria-label="Show Bucket History 2026" class="feature-dot" data-dot="6">
       </button>
-      <button aria-current="false" aria-label="Show featured artwork 8" class="feature-dot" data-dot="7">
+      <button aria-current="false" aria-label="Show Homecoming Gameweek 2026" class="feature-dot" data-dot="7">
+      </button>
+      <button aria-current="false" aria-label="Show SJU Gameday 2026" class="feature-dot" data-dot="8">
+      </button>
+      <button aria-current="false" aria-label="Show St. Olaf Gameday 2026" class="feature-dot" data-dot="9">
       </button>
      </div>
     </div>
@@ -100,29 +110,35 @@
       </span>
      </div>
      <div class="featured-thumbnails">
-      <button aria-label="View featured artwork 1" class="featured-thumb selected" data-feature="0">
-       <img alt="" loading="lazy" src="assets/art/hammer-week-v6.png"/>
+      <button aria-label="View Final Decision LeBron" class="featured-thumb selected" data-feature="0">
+       <img alt="" loading="lazy" src="assets/art/final-decision-lebron.jpg"/>
       </button>
-      <button aria-label="View featured artwork 2" class="featured-thumb" data-feature="1">
-       <img alt="" loading="lazy" src="assets/art/kyrie-irving.png"/>
-      </button>
-      <button aria-label="View featured artwork 3" class="featured-thumb" data-feature="2">
-       <img alt="" loading="lazy" src="assets/art/augsburg-gameday-v6.jpg"/>
-      </button>
-      <button aria-label="View featured artwork 4" class="featured-thumb" data-feature="3">
-       <img alt="" loading="lazy" src="assets/art/ceedee-v6.png"/>
-      </button>
-      <button aria-label="View featured artwork 5" class="featured-thumb" data-feature="4">
-       <img alt="" loading="lazy" src="assets/art/gustavus-gameweek-2025.jpg"/>
-      </button>
-      <button aria-label="View featured artwork 6" class="featured-thumb" data-feature="5">
-       <img alt="" loading="lazy" src="assets/art/shohei-ohtani.jpg"/>
-      </button>
-      <button aria-label="View featured artwork 7" class="featured-thumb" data-feature="6">
+      <button aria-label="View Ja'Marr" class="featured-thumb" data-feature="1">
        <img alt="" loading="lazy" src="assets/art/jamarr-v6.png"/>
       </button>
-      <button aria-label="View featured artwork 8" class="featured-thumb" data-feature="7">
-       <img alt="" loading="lazy" src="assets/art/hamilton-1-copy.jpg"/>
+      <button aria-label="View Kyrie" class="featured-thumb" data-feature="2">
+       <img alt="" loading="lazy" src="assets/art/kyrie-irving.png"/>
+      </button>
+      <button aria-label="View CeeDee" class="featured-thumb" data-feature="3">
+       <img alt="" loading="lazy" src="assets/art/ceedee-v6.png"/>
+      </button>
+      <button aria-label="View Jordan Poster" class="featured-thumb" data-feature="4">
+       <img alt="" loading="lazy" src="assets/art/jordan-poster.jpg"/>
+      </button>
+      <button aria-label="View Halloween Gameweek 2026" class="featured-thumb" data-feature="5">
+       <img alt="" loading="lazy" src="assets/art/halloween-gameweek-2026.png"/>
+      </button>
+      <button aria-label="View Bucket History 2026" class="featured-thumb" data-feature="6">
+       <img alt="" loading="lazy" src="assets/art/bucket-history-2026.jpg"/>
+      </button>
+      <button aria-label="View Homecoming Gameweek 2026" class="featured-thumb" data-feature="7">
+       <img alt="" loading="lazy" src="assets/art/homecoming-gameweek-2026.jpg"/>
+      </button>
+      <button aria-label="View SJU Gameday 2026" class="featured-thumb" data-feature="8">
+       <img alt="" loading="lazy" src="assets/art/sju-gameday-2026.jpg"/>
+      </button>
+      <button aria-label="View St. Olaf Gameday 2026" class="featured-thumb" data-feature="9">
+       <img alt="" loading="lazy" src="assets/art/st olaf gameday 2026.png"/>
       </button>
      </div>
     </div>
