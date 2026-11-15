@@ -1886,3 +1886,11 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 .collections .horizontal-card-row .project-card { scroll-snap-align: none !important; }
+
+/* V6.37 — project rows are circular, free-moving rails. */
+.collections .cards-grid.horizontal-card-row {
+  scroll-snap-type:none !important;
+  scroll-behavior:auto !important;
+  overscroll-behavior-x:contain;
+}
+.collections .horizontal-card-row .project-card { scroll-snap-align:none !important; }

@@ -159,39 +159,32 @@
   schedule();
 })();
 
-/* V6.36: native, momentum-preserving trackpad scroll for project shelves.
-   Horizontal gestures are handled by the browser; vertical wheel input is
-   translated only when needed. No snapping or scripted easing during swipes. */
+/* V6.38 — finite project shelves with natural trackpad movement.
+   No duplicated cards, no looping; wheel gestures move smoothly to either end. */
 (function(){
-  function enableHorizontalRows(){
-    document.querySelectorAll('.slider-shell').forEach(shell=>{
+  function init(){
+    document.querySelectorAll('.collections .slider-shell').forEach(shell=>{
       const row=shell.querySelector('.horizontal-card-row');
-      if(!row || shell.dataset.trackpadReady)return;
-      shell.dataset.trackpadReady='true';
+      if(!row || row.dataset.finiteWheelReady)return;
+      row.dataset.finiteWheelReady='true';
       shell.addEventListener('wheel',e=>{
-        if(e.ctrlKey || e.metaKey || e.defaultPrevented)return;
-        const max=Math.max(0,row.scrollWidth-row.clientWidth);
-        if(max<2)return;
-        // Native horizontal trackpad scrolling retains Safari's own momentum.
-        if(Math.abs(e.deltaX)>0.5)return;
-        let delta=e.deltaY;
+        if(e.ctrlKey||e.metaKey||e.defaultPrevented)return;
+        let delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
         if(e.deltaMode===1)delta*=16;
         else if(e.deltaMode===2)delta*=row.clientWidth;
-        if(Math.abs(delta)<0.1)return;
-        const target=Math.min(max,Math.max(0,row.scrollLeft+delta));
-        if(Math.abs(target-row.scrollLeft)<0.1)return;
+        if(Math.abs(delta)<.1)return;
+        const max=Math.max(0,row.scrollWidth-row.clientWidth);
+        if(max<=1)return;
+        const atStart=row.scrollLeft<=1 && delta<0;
+        const atEnd=row.scrollLeft>=max-1 && delta>0;
+        if(atStart||atEnd)return; // Let the page scroll at the ends.
         e.preventDefault();
-        row.scrollLeft=target;
+        row.scrollLeft=Math.max(0,Math.min(max,row.scrollLeft+delta));
       },{passive:false});
-      row.addEventListener('keydown',e=>{
-        if(e.target!==row||!['ArrowLeft','ArrowRight'].includes(e.key))return;
-        e.preventDefault();
-        row.scrollBy({left:e.key==='ArrowRight'?280:-280,behavior:'smooth'});
-      });
     });
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enableHorizontalRows);
-  else enableHorizontalRows();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
 })();
 
 /* V6.20: visible shelf navigation, including cards that extend off-screen. */
@@ -199,7 +192,7 @@
   function initShelves(){
     document.querySelectorAll('.slider-shell').forEach(shell=>{
       const row=shell.querySelector('.horizontal-card-row,.horizontal-art-row');
-      if(!row)return;
+      if(!row || row.dataset.loopReady)return;
       const prev=shell.querySelector('.row-arrow-prev'),next=shell.querySelector('.row-arrow-next');
       function update(){
         const overflow=row.scrollWidth>row.clientWidth+3;
