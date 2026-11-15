@@ -1,112 +1,82 @@
-// HOVA EDITZ V3: no artwork files are inserted until the owner approves selections.
-const menuButton=document.querySelector('.menu-button');const nav=document.querySelector('.nav');if(menuButton&&nav){menuButton.addEventListener('click',()=>{const open=nav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open));menuButton.textContent=open?'CLOSE −':'MENU +'});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menuButton.setAttribute('aria-expanded','false');menuButton.textContent='MENU +'}))}document.querySelectorAll('[data-year]').forEach(el=>el.textContent=new Date().getFullYear());
-// Continuous, measured marquee and artwork strips. The entire repeat width
-// includes the gap; no CSS keyframe reset or hover-induced stop.
-const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-function continuousStrip(track,{direction=-1,speed=32,hoverRatio=1}={}) {
-  if(!track || !track.children.length) return;
-  const originals=[...track.children];
-  const shell=track.parentElement;
-  let span=0,position=0,last=0;
-  function fill() {
-    track.querySelectorAll('[data-loop-clone]').forEach(el=>el.remove());
-    const first=originals[0];
-    // Append a COMPLETE duplicate sequence before measuring its repeat distance.
-    let firstClone;
-    originals.forEach((el,i)=>{const clone=el.cloneNode(true);clone.dataset.loopClone='';clone.setAttribute('aria-hidden','true');clone.querySelectorAll('img').forEach(img=>img.alt='');track.appendChild(clone);if(i===0)firstClone=clone});
-    span=firstClone.offsetLeft-first.offsetLeft;
-    if(span<=0)return;
-    const required=Math.ceil((shell.clientWidth+span)/span)+1;
-    for(let i=1;i<required;i++){
-      originals.forEach(el=>{const clone=el.cloneNode(true);clone.dataset.loopClone='';clone.setAttribute('aria-hidden','true');clone.querySelectorAll('img').forEach(img=>img.alt='');track.appendChild(clone)});
-    }
-    position=((position%span)+span)%span;
-  }
-  const observer=new ResizeObserver(fill);
-  observer.observe(shell);originals.forEach(el=>observer.observe(el));
-  window.addEventListener('load',fill,{once:true});
 
-  function frame(now){
-    const dt=last?Math.min((now-last)/1000,.12):0;last=now;
-    if(!reducedMotion.matches && span>0){
-      position=(position+speed*dt)%span;
-      track.style.transform=`translate3d(${direction<0?-position:position-span}px,0,0)`;
-    } else if(reducedMotion.matches)track.style.transform='translate3d(0,0,0)';
-    requestAnimationFrame(frame);
+(async function(){
+  const track=document.querySelector('.feature-track');
+  if(!track)return;
+  const slides=[...track.querySelectorAll('.feature-slide')];
+  let active=0, art=[],lightIndex=0;
+  const $=id=>document.getElementById(id);
+  // Seamless directional carousel: clones permit continued forward/backward motion.
+  const count=slides.length;
+  const before=slides[count-1].cloneNode(true),after=slides[0].cloneNode(true);
+  before.removeAttribute('data-slide');after.removeAttribute('data-slide');
+  track.prepend(before);track.append(after);
+  let position=1, transitioning=false;
+  function renderSelection(){
+    slides.forEach((slide,i)=>{slide.classList.toggle('is-active',i===active);slide.setAttribute('aria-hidden',String(i!==active))});
+    $('slide-number').textContent=String(active+1).padStart(2,'0');
+    document.querySelectorAll('[data-dot]').forEach(b=>{const yes=Number(b.dataset.dot)===active;b.classList.toggle('active',yes);b.setAttribute('aria-current',String(yes))});
+    document.querySelectorAll('[data-feature]').forEach(b=>{const yes=Number(b.dataset.feature)===active;b.classList.toggle('selected',yes);if(yes){const shelf=b.parentElement;shelf.scrollTo({left:Math.max(0,b.offsetLeft-shelf.offsetLeft-shelf.clientWidth/2+b.clientWidth/2),behavior:'smooth'})}});
   }
-  fill();requestAnimationFrame(frame);
-}
-continuousStrip(document.querySelector('#hero-track'),{direction:-1,speed:32});
-continuousStrip(document.querySelector('.marquee-track'),{direction:1,speed:25});
-
-// V4.1: stable, geometry-independent hover selection for overlapping artwork.
-// The active card cannot steal the pointer and cause another card to activate.
-// Horizontal zones have hysteresis and a deliberate dwell before switching.
-document.querySelectorAll('.stack-gallery').forEach(gallery=>{
-  const cards=[...gallery.querySelectorAll('.collage-piece')];
-  const link=gallery.closest('.collection-card')?.querySelector('.collection-title-link');
-  let active=-1, pending=-1, timer=0;
-  const cutoffs=[.19,.36,.64,.81];
-  const zone=x=>cutoffs.findIndex(v=>x<v)===-1?4:cutoffs.findIndex(v=>x<v);
-  function schedule(index){
-    if(index===active||index===pending)return;
-    clearTimeout(timer);pending=index;
-    timer=setTimeout(()=>{active=index;pending=-1;gallery.dataset.active=String(index+1)},230);
+  function setPosition(animate=true){
+    track.style.transition=animate?'transform .8s cubic-bezier(.22,1,.36,1)':'none';
+    track.style.transform=`translateX(${-position*100}%)`;
+    if(!animate){void track.offsetWidth;track.style.transition='transform .8s cubic-bezier(.22,1,.36,1)'}
   }
-  gallery.addEventListener('pointermove',e=>{
-    if(e.pointerType==='touch')return;
-    const r=gallery.getBoundingClientRect();
-    const x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
-    let next=zone(x);
-    // Keep the current selection around zone boundaries to prevent chatter.
-    if(active>=0){const low=active===0?0:cutoffs[active-1],high=active===4?1:cutoffs[active];
-      if(x>=low-.025&&x<=high+.025)next=active;}
-    schedule(next);
+  function step(direction){if(transitioning)return;transitioning=true;active=(active+direction+count)%count;position+=direction;renderSelection();setPosition()}
+  track.addEventListener('transitionend',e=>{
+    if(e.target!==track||e.propertyName!=='transform')return;
+    if(position===count+1){position=1;setPosition(false)}
+    else if(position===0){position=count;setPosition(false)}
+    transitioning=false;
   });
-  gallery.addEventListener('pointerleave',()=>{clearTimeout(timer);pending=-1;active=-1;delete gallery.dataset.active});
-  gallery.addEventListener('click',()=>link?.click());
-  cards.forEach(card=>{card.removeAttribute('role');card.removeAttribute('tabindex');card.removeAttribute('aria-label')});
-});
-// Intentional non-submitting preview until a real contact destination is configured.
-const form=document.querySelector('#inquiry-form');if(form){form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;document.querySelector('#form-status').textContent='Your inquiry has not been sent. Contact submissions will be enabled before public launch.'})}
-
-// Portfolio image viewer: all images are sourced from the user's supplied exports.
-const artworks=[...document.querySelectorAll('.gallery-art')];const lb=document.querySelector('#lightbox');if(lb&&artworks.length){let current=0;const image=lb.querySelector('img');const label=lb.querySelector('.lightbox-label');const show=i=>{current=(i+artworks.length)%artworks.length;image.src=artworks[current].dataset.full;image.alt=artworks[current].dataset.name;label.textContent=`${artworks[current].dataset.name} — ${current+1} / ${artworks.length}`};artworks.forEach((el,i)=>el.addEventListener('click',()=>{show(i);lb.hidden=false;document.body.style.overflow='hidden'}));const close=()=>{lb.hidden=true;document.body.style.overflow='';image.removeAttribute('src')};lb.querySelector('.lightbox-close').addEventListener('click',close);lb.querySelector('.lightbox-prev').addEventListener('click',()=>show(current-1));lb.querySelector('.lightbox-next').addEventListener('click',()=>show(current+1));lb.addEventListener('click',e=>{if(e.target===lb)close()});document.addEventListener('keydown',e=>{if(lb.hidden)return;if(e.key==='Escape')close();if(e.key==='ArrowLeft')show(current-1);if(e.key==='ArrowRight')show(current+1)})}
-
-// V3.9 — individual glyph fitting, rather than loosening the entire heading.
-// Each letter is positioned relative to the preceding glyph. Original text remains
-// available to screen readers through the accessible heading label.
-(function fitDisplayType(){
-  const pair={
-    'DE':-.064,'ES':-.055,'SI':-.044,'IG':-.052,'GN':-.071,
-    'FO':-.058,'OR':-.066,'TH':-.052,'HE':-.085,'MO':-.060,
-    'OM':-.057,'ME':-.061,'EN':-.058,'NT':-.052,
-    'BU':-.047,'UI':-.052,'IL':-.047,'LT':-.052,
-    'GA':-.072,'AM':-.069,'WO':-.075,'RK':-.057,
-    'CL':-.045,'LI':-.052,'IE':-.052,'EW':-.076,
-    'PE':-.052,'ER':-.060,'RS':-.049,'SO':-.054,
-    'ON':-.056,'NA':-.066,'AL':-.060,'PR':-.065,
-    'RO':-.061,'OJ':-.044,'JE':-.050,'EC':-.057,'CT':-.050,'TS':-.035,
-    'ID':-.053,'DA':-.070,'AN':-.055
-  };
-  document.querySelectorAll('.hero h1,.section-heading h2,.contact h2,.collection-title-link h3').forEach(heading=>{
-    if(heading.dataset.opticalFitted)return;
-    heading.dataset.opticalFitted='true';
-    const full=heading.textContent.trim();
-    heading.setAttribute('aria-label',full);
-    const walker=document.createTreeWalker(heading,NodeFilter.SHOW_TEXT);
-    const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
-    nodes.forEach(node=>{
-      if(node.parentElement?.classList.contains('dot'))return;
-      const frag=document.createDocumentFragment();let prev='';
-      for(const ch of node.nodeValue){
-        if(/\s/.test(ch)){const sp=document.createElement('span');sp.className='optical-space';sp.textContent=ch;sp.setAttribute('aria-hidden','true');frag.appendChild(sp);prev='';continue;}
-        const el=document.createElement('span');el.className='optical-glyph'+(!prev?' first':'');
-        el.textContent=ch;el.setAttribute('aria-hidden','true');
-        if(prev)el.style.setProperty('--kern',(pair[prev+ch]??-.052)+'em');
-        frag.appendChild(el);prev=ch;
-      }
-      node.replaceWith(frag);
+  function jump(index){if(transitioning||index===active)return;const forward=(index-active+count)%count;const backward=(active-index+count)%count;
+    if(Math.min(forward,backward)===1){step(forward===1?1:-1);return}
+    active=index;position=index+1;renderSelection();setPosition(false);
+  }
+  $('next').addEventListener('click',()=>step(1));
+  $('prev').addEventListener('click',()=>step(-1));
+  document.querySelectorAll('[data-dot]').forEach(b=>b.addEventListener('click',()=>jump(Number(b.dataset.dot))));
+  document.querySelectorAll('[data-feature]').forEach(b=>b.addEventListener('click',()=>{jump(Number(b.dataset.feature));window.scrollTo({top:0,behavior:'smooth'})}));
+  renderSelection();setPosition(false);
+  const data={"collections":{"client-2026":[["assets/art/new-visit-copy.jpg","new visit copy"],["assets/art/concordia-gameday-2026.jpg","Concordia Gameday 2026"],["assets/art/captain-spotlight-2026.jpg","Captain Spotlight 2026"],["assets/art/halloween-gameweek-2026.png","Halloween Gameweek 2026"],["assets/art/sju-gameday-2026.jpg","SJU Gameday 2026"],["assets/art/good-luck-2026.jpg","Good Luck 2026"],["assets/art/bethel-gameday-graphic-copy.jpg","bethel gameday graphic copy"],["assets/art/bucket-history-2026.jpg","Bucket History 2026"],["assets/art/bethel-gameweek-copy.jpg","bethel gameweek copy"],["assets/art/homecoming-gameweek-2026.jpg","homecoming gameweek 2026"],["assets/art/crown-gameweek-2026.jpg","Crown Gameweek 2026"],["assets/art/olaf-gameweek-2026.png","Olaf Gameweek 2026"],["assets/art/crown-gameday-2026.jpg","Crown Gameday 2026"],["assets/art/bethel-gameday-copy.jpg","bethel gameday copy"],["assets/art/carleton-gameday-2026.png","Carleton Gameday 2026"],["assets/art/winter-visit-copy.jpg","winter visit copy"],["assets/art/concordia-gameweek-2026.jpg","Concordia Gameweek 2026"],["assets/art/halloween-gameday-2026.jpg","halloween gameday 2026"],["assets/art/carleton-gameweek-2026.jpg","Carleton Gameweek 2026"],["assets/art/sju-gameweek-2026.jpg","SJU Gameweek 2026"],["assets/art/committed-graphic-2026.jpg","Committed Graphic 2026"],["assets/art/homecoming-gameday-2026.jpg","homecoming gameday 2026"],["assets/art/gustavus-gameweek-2026.png","Gustavus Gameweek 2026"],["assets/art/gustavus-gameday-2026.png","gustavus gameday 2026"],["assets/art/hammer week.png","Hammer Week 2026"],["assets/art/st olaf gameday 2026.png","St. Olaf Gameday 2026"],["assets/art/hammer-week-v6.png","Hammer Week"],["assets/art/augsburg-gameday-v6.jpg","Augsburg Gameday"]],"client-2025":[["assets/art/gustavus-gameweek-2025.jpg","Gustavus Gameweek 2025"],["assets/art/augsburg-gameday-2025.jpg","Augsburg Gameday 2025"],["assets/art/halloween-gameweek-2025.jpg","Halloween Gameweek 2025"],["assets/art/carleton-gameday-2025.jpg","Carleton Gameday 2025"],["assets/art/augsburg-gameweek-2025.jpg","Augsburg Gameweek 2025"],["assets/art/halloween-gameday-2025.jpg","Halloween Gameday 2025"],["assets/art/carleton-gameweek-2025.jpg","Carleton Gameweek 2025"],["assets/art/olaf-gameday-2025.jpg","Olaf Gameday 2025"],["assets/art/gustavus-gameday-2025.jpg","gustavus gameday 2025"]],"sport-basketball":[["assets/art/kyrie-irving.png","Kyrie Irving"],["assets/art/brunson-copy-2.jpg","brunson copy 2"],["assets/art/final-decision-lebron.jpg","Final Decision Lebron"],["assets/art/kobe-bryant.jpg","Kobe Bryant"],["assets/art/jordan-poster.jpg","Jordan Poster"],["assets/art/allen-iverson.jpg","Allen Iverson"]],"sport-football":[["assets/art/ps2.jpg","PS2"],["assets/art/jeremiah-smith.jpg","Jeremiah Smith"],["assets/art/lamar-jackson.jpg","Lamar Jackson"],["assets/art/jsn.jpg","JSN"],["assets/art/ceedee-v6.png","CeeDee"],["assets/art/jamarr-v6.png","Ja'Marr"]],"sport-baseball":[["assets/art/shohei-ohtani.jpg","Shohei Ohtani"]],"sport-motorsport":[["assets/art/hamilton-1-copy.jpg","hamilton 1 copy"]],"sport-soccer":[["assets/art/wc-final.jpg","WC Final"],["assets/art/jose-quinones.jpg","Jose Quinones"]]},"covers":{"client-2026":["Hamline Football","2026","assets/art/hammer-week-v6.png"],"client-2025":["Hamline Football","2025","assets/art/gustavus-gameweek-2025.jpg"],"sport-basketball":["Basketball","Personal projects","assets/art/kyrie-irving.png"],"sport-football":["Football","Personal projects","assets/art/ceedee-v6.png"],"sport-baseball":["Baseball","Personal projects","assets/art/shohei-ohtani.jpg"],"sport-motorsport":["Motorsport","Personal projects","assets/art/hamilton-1-copy.jpg"],"sport-soccer":["Soccer","Personal projects","assets/art/wc-final.jpg"]},"featured":["assets/art/hammer-week-v6.png","assets/art/kyrie-irving.png","assets/art/augsburg-gameday-v6.jpg","assets/art/ceedee-v6.png","assets/art/gustavus-gameweek-2025.jpg","assets/art/shohei-ohtani.jpg","assets/art/jamarr-v6.png","assets/art/hamilton-1-copy.jpg"]};
+  const collections=$('collections'),detail=$('collection-view'),feature=document.querySelector('.feature-section');
+  function openCollection(key){
+    const items=data.collections[key];if(!items)return;
+    art=items;const meta=data.covers[key];
+    $('collection-title').textContent=meta[0];
+    $('collection-subtitle').textContent=key.startsWith('client-')?`${meta[1]} · Graphic design internship`:'';
+    $('art-grid').replaceChildren();
+    items.forEach(([src,label],i)=>{
+      const btn=document.createElement('button');btn.className='art-tile';btn.type='button';btn.setAttribute('aria-label',`View ${label}`);
+      const img=document.createElement('img');img.src=src;img.alt=label;img.loading='lazy';btn.append(img);btn.addEventListener('click',()=>showLightbox(i));$('art-grid').append(btn);
     });
-  });
+    collections.hidden=true;feature.hidden=true;detail.hidden=false;
+    history.replaceState(null,'','#'+key);window.scrollTo({top:0,behavior:'instant'});
+  }
+  function back(){detail.hidden=true;collections.hidden=false;feature.hidden=false;history.replaceState(null,'',location.pathname);window.scrollTo({top:0,behavior:'instant'});renderSelection()}
+  document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openCollection(b.dataset.open)));
+  $('back-to-collections').addEventListener('click',back);
+  document.querySelector('.nav-portfolio')?.addEventListener('click',e=>{if(!detail.hidden){e.preventDefault();back();requestAnimationFrame(()=>document.getElementById('featured-work')?.scrollIntoView({behavior:'smooth'}))}});
+  function showLightbox(i){lightIndex=(i+art.length)%art.length;$('lightbox-image').src=art[lightIndex][0];$('lightbox-image').alt=art[lightIndex][1];$('lightbox').hidden=false;document.body.style.overflow='hidden'}
+  function closeLightbox(){$('lightbox').hidden=true;document.body.style.overflow=''}
+  $('lightbox-close').addEventListener('click',closeLightbox);
+  $('lightbox-prev').addEventListener('click',()=>showLightbox(lightIndex-1));
+  $('lightbox-next').addEventListener('click',()=>showLightbox(lightIndex+1));
+  $('lightbox').addEventListener('click',e=>{if(e.target===$('lightbox'))closeLightbox()});
+  document.addEventListener('keydown',e=>{if(!$('lightbox').hidden){if(e.key==='Escape')closeLightbox();if(e.key==='ArrowRight')showLightbox(lightIndex+1);if(e.key==='ArrowLeft')showLightbox(lightIndex-1)}else if(!detail.hidden&&e.key==='Escape')back();else if(e.key==='ArrowRight')$('next').click();else if(e.key==='ArrowLeft')$('prev').click()});
+  if(location.hash&&data.collections[location.hash.slice(1)])openCollection(location.hash.slice(1));
+  else if(location.hash==='#featured-work')requestAnimationFrame(()=>document.getElementById('featured-work')?.scrollIntoView({behavior:'instant'}));
+})();
+
+(function(){
+  const cursor=document.querySelector('.custom-cursor');
+  if(!cursor || !window.matchMedia('(hover:hover) and (pointer:fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  document.documentElement.classList.add('has-custom-cursor');
+  let x=-100,y=-100,cx=-100,cy=-100;
+  function animate(){cx+=(x-cx)*.36;cy+=(y-cy)*.36;cursor.style.transform=`translate3d(${cx}px,${cy}px,0) translate(-50%,-50%)`;requestAnimationFrame(animate)}
+  document.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;x=e.clientX;y=e.clientY;cursor.classList.add('visible');const target=e.target.closest('button,a');cursor.classList.toggle('on-control',!!target);cursor.classList.toggle('on-project',!!e.target.closest('.project-card,.art-tile,.featured-thumb,.hero-arrow,.feature-dot,.nav-bubble a'))});
+  document.addEventListener('pointerleave',()=>cursor.classList.remove('visible'));
+  document.addEventListener('pointerdown',()=>cursor.classList.add('pressed'));
+  document.addEventListener('pointerup',()=>cursor.classList.remove('pressed'));
+  requestAnimationFrame(animate);
 })();

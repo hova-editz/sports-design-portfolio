@@ -1,0 +1,8 @@
+V5.1 Work page
+- 10 requested designs excluded from Work page (source image files preserved).
+- Added hammer week.png and st olaf gameday 2026.png to Hamline Football 2026.
+- Gustavus Gameweek 2025 requested earlier is not in the uploaded ZIP; please supply the original export to add it.
+- Undated Hamline graphics are provisionally grouped under 2026; review before final publishing.
+- Cover framing uses CSS only; no original artwork altered.
+
+V5.3: Work page returned to dark theme. Client Work and Personal Projects start collapsed; click either heading to reveal its existing cover cards.
