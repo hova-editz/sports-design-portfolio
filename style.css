@@ -1758,3 +1758,46 @@ html {
   .about-page .about-story {padding-top:0 !important;}
   .about-page .about-resume {border-radius:18px;padding:24px;}
 }
+/* V6.25: align left content with the top of the resume panel, and contact
+   with its bottom, while retaining the current responsive mobile layout. */
+@media (min-width: 801px) {
+  .about-page .about-editorial-grid { align-items: stretch !important; }
+  .about-page .about-story {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    padding-top: 0 !important;
+    min-height: 100%;
+  }
+  .about-page .about-me-label {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    line-height: 1.4;
+  }
+  .about-page .about-connect {
+    margin-top: auto !important;
+    padding-top: 28px;
+    padding-bottom: 0;
+  }
+}
+/* V6.25: reserve a small stroke-safe boundary at the shelf edges.
+   Keep the same card gap, outline color, and inset outline offset. */
+.collections .cards-grid.horizontal-card-row {
+  padding: 9px 12px 18px !important;
+  width: calc(100% + 8px) !important;
+  margin-left: -4px;
+  box-sizing: border-box;
+  scroll-padding-inline: 12px;
+}
+.collections .horizontal-card-row .project-card { overflow: visible !important; }
+.collections .horizontal-card-row .project-card:is(:hover,:focus-visible,:active) .project-image {
+  outline-color: #e5dac6;
+  box-shadow: inset 0 0 0 2px rgba(229,218,198,.6);
+}
+
+/* V6.26: fill portfolio artwork tiles without changing original files.
+   Keep lightbox and featured carousel uncropped. */
+.collection-view .art-tile img {
+  object-fit: cover !important;
+  object-position: center center !important;
+}
