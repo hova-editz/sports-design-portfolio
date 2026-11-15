@@ -1701,3 +1701,13 @@ html {
 .collection-view .vertical-art-grid .art-tile { width: 100% !important; min-width: 0 !important; max-width: none !important; flex: none !important; }
 @media(max-width:850px){.collection-view .art-grid.vertical-art-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}}
 @media(max-width:520px){.collection-view .art-grid.vertical-art-grid{grid-template-columns:1fr !important;}}
+
+/* V6.23: compact resume introduction, align About Me with Experience rule */
+.about-page .about-layout.about-editorial { padding-top: clamp(68px, 6.5vw, 100px) !important; }
+.about-page .about-editorial-grid { margin-top: 0 !important; }
+.about-page .about-story { padding-top: 34px; }
+.about-page .about-me-label { margin-top: 0 !important; }
+@media (max-width: 800px) {
+  .about-page .about-layout.about-editorial { padding-top: 75px !important; }
+  .about-page .about-story { padding-top: 0; }
+}
