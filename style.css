@@ -1559,7 +1559,7 @@ html {
 .collections .project-image {
   box-shadow: inset 0 0 0 2px transparent;
   outline: 2px solid transparent;
-  outline-offset: -1px;
+  outline-offset: -2px;
   transition: outline-color .22s ease, box-shadow .22s ease;
 }
 .collections .project-card:hover .project-image,
@@ -1710,4 +1710,51 @@ html {
 @media (max-width: 800px) {
   .about-page .about-layout.about-editorial { padding-top: 75px !important; }
   .about-page .about-story { padding-top: 0; }
+}
+
+/* V6.24: keep the original cream/gray hover outline and its inset offset visible.
+   Reserve space at both edges so the outline never clips on the first tile. */
+.collections .cards-grid.horizontal-card-row {
+  box-sizing:border-box;
+  padding: 5px 8px 18px !important;
+  scroll-padding-inline: 8px;
+  scroll-behavior:auto !important;
+  scroll-snap-type:x proximity !important;
+}
+.collections .horizontal-card-row .project-card { scroll-snap-align:start; }
+.collections .horizontal-card-row .project-image {
+  outline:2px solid transparent;
+  outline-offset:-2px;
+  box-shadow:inset 0 0 0 2px transparent;
+}
+.collections .horizontal-card-row .project-card:is(:hover,:focus-visible,:active) .project-image {
+  outline-color:#e5dac6;
+}
+/* V6.24: align ABOUT ME with the first resume panel's top content,
+   and create the same understated translucent treatment as the nav bubble. */
+.about-page .about-editorial-grid { align-items:start; }
+.about-page .about-resume {
+  box-sizing:border-box;
+  background:rgba(255,255,255,.028);
+  border:1px solid rgba(245,241,232,.12);
+  border-radius:24px;
+  padding:clamp(22px,2.7vw,38px);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.about-page .about-story { padding-top:clamp(22px,2.7vw,38px) !important; }
+.about-page .about-resume .resume-block:first-child { border-top:0; padding-top:0; }
+.about-page .about-resume .resume-block:first-child h2 { margin-top:0; }
+.about-page .about-resume .resume-block {
+  padding-top:28px; padding-bottom:31px; margin-bottom:12px;
+}
+.about-page .about-resume .resume-block h2 {font-size:clamp(18px,1.46vw,23px);margin-bottom:24px;}
+.about-page .about-resume .resume-entry h3 {font-size:clamp(15px,1.1vw,17px);}
+.about-page .about-resume .resume-entry p {font-size:14px;}
+.about-page .about-resume .resume-entry>span {font-size:13px;}
+.about-page .about-resume .skill-tags span {font-size:13px;padding:9px 12px;}
+.about-page .about-resume .resume-block:last-child {margin-bottom:0;padding-bottom:0;}
+@media(max-width:800px) {
+  .about-page .about-story {padding-top:0 !important;}
+  .about-page .about-resume {border-radius:18px;padding:24px;}
 }

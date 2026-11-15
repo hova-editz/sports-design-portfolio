@@ -159,21 +159,27 @@
   schedule();
 })();
 
-/* V6.19: horizontal row scrolling with trackpad, mouse wheel and keyboard. */
+/* V6.24: Mac trackpad horizontal and vertical-wheel-to-horizontal scrolling.
+   Attach to the entire shelf, including gaps between the cards. */
 (function(){
   function enableHorizontalRows(){
-    document.querySelectorAll('.horizontal-card-row,.horizontal-art-row').forEach(row=>{
-      if(row.dataset.horizontalReady)return;row.dataset.horizontalReady='true';
-      row.addEventListener('wheel',e=>{
-        if(!row.scrollWidth || row.scrollWidth<=row.clientWidth+2)return;
-        const delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
-        const atStart=row.scrollLeft<=1 && delta<0;
-        const atEnd=row.scrollLeft+row.clientWidth>=row.scrollWidth-2 && delta>0;
-        if(atStart||atEnd)return;
-        e.preventDefault();row.scrollLeft+=delta;
+    document.querySelectorAll('.slider-shell').forEach(shell=>{
+      const row=shell.querySelector('.horizontal-card-row');
+      if(!row || shell.dataset.trackpadReady)return;
+      shell.dataset.trackpadReady='true';
+      shell.addEventListener('wheel',e=>{
+        if(e.ctrlKey || row.scrollWidth<=row.clientWidth+2)return;
+        const dx=e.deltaX,dy=e.deltaY;
+        const delta=Math.abs(dx)>Math.abs(dy)?dx:dy;
+        if(Math.abs(delta)<.01)return;
+        const start=row.scrollLeft<=1&&delta<0;
+        const end=row.scrollLeft+row.clientWidth>=row.scrollWidth-2&&delta>0;
+        if(start||end)return;
+        e.preventDefault();
+        row.scrollLeft+=delta;
       },{passive:false});
       row.addEventListener('keydown',e=>{
-        if(e.target!==row || !['ArrowLeft','ArrowRight'].includes(e.key))return;
+        if(e.target!==row||!['ArrowLeft','ArrowRight'].includes(e.key))return;
         e.preventDefault();row.scrollBy({left:e.key==='ArrowRight'?280:-280,behavior:'smooth'});
       });
     });
