@@ -176,6 +176,10 @@
     ],
     "sport-football": [
       [
+        "assets/art/jamarr-v6.png",
+        "Ja'Marr"
+      ],
+      [
         "assets/art/ps2.jpg",
         "PS2"
       ],
@@ -194,10 +198,6 @@
       [
         "assets/art/ceedee-v6.png",
         "CeeDee"
-      ],
-      [
-        "assets/art/jamarr-v6.png",
-        "Ja'Marr"
       ]
     ],
     "sport-baseball": [
