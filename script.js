@@ -106,9 +106,12 @@
       const img=document.createElement('img');img.src=src;img.alt=label;img.loading='lazy';btn.append(img);btn.addEventListener('click',()=>showLightbox(i));$('art-grid').append(btn);
     });
     collections.hidden=true;feature.hidden=true;detail.hidden=false;
+    document.querySelector('.intro-section').hidden = true;window.scrollTo(0, 0);
     history.replaceState(null,'','#'+key);requestAnimationFrame(()=>{detail.scrollIntoView({behavior:'instant',block:'start'});updatePortfolioActive()});
   }
-  function back(){detail.hidden=true;collections.hidden=false;feature.hidden=false;history.replaceState(null,'',location.pathname);requestAnimationFrame(()=>{document.getElementById('collections')?.scrollIntoView({behavior:'instant',block:'start'});updatePortfolioActive()});renderSelection()}
+  function back(){detail.hidden=true;collections.hidden=false;feature.hidden=false;
+    document.querySelector('.intro-section').hidden = false;
+    history.replaceState(null,'',location.pathname);requestAnimationFrame(()=>{document.getElementById('collections')?.scrollIntoView({behavior:'instant',block:'start'});updatePortfolioActive()});renderSelection()}
   document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openCollection(b.dataset.open)));
   $('back-to-collections').addEventListener('click',back);
   const portfolioLink=document.querySelector('.nav-portfolio');
@@ -116,7 +119,8 @@
   // Portfolio navigation always leads to the actual artwork, never the intro.
   portfolioLink?.addEventListener('click',e=>{
     e.preventDefault();
-    if(!detail.hidden){detail.hidden=true;collections.hidden=false;feature.hidden=false;renderSelection()}
+    if(!detail.hidden){detail.hidden=true;collections.hidden=false;feature.hidden=false;renderSelection(),document.querySelector('.intro-section').hidden = false;
+}
     history.replaceState(null,'',location.pathname+'#featured-work');
     requestAnimationFrame(()=>featuredTarget?.scrollIntoView({behavior:'smooth',block:'start'}));
   });
